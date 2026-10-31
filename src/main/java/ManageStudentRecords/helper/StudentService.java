@@ -147,21 +147,8 @@ public class StudentService {
             return;
         }
 
-        System.out.println(
-                "\nUpdating: " + student.getName() +
-                        " | Grade: " + student.getGrade() +
-                        " | Section: " + student.getSection()
-        );
-
-//        System.out.println(
-//                "1. Name\n" +
-//                "2. Date of Birth\n" +
-//                "3. Grade\n" +
-//                "4. Section\n" +
-//                "5. Subject Marks\n" +
-//                "6. Cancel"
-//        );
-
+        System.out.printf("%nUpdating: %s | Grade: %s | Section: %s%n",
+                student.getName(), student.getGrade(), student.getSection());
         System.out.print("""
                 1. Name
                 2. Date of Birth
@@ -198,13 +185,21 @@ public class StudentService {
                 break;
 
             case 6:
-                System.out.println("Update cancelled." + "\n --------- \n\n");
+                System.out.print("""
+                Update cancelled.
+                ---------
+                
+                """);
                 return;
         }
 
         save();
 
-        System.out.println("Student updated successfully." + "\n --------- \n\n");
+        System.out.print("""
+                Student updated successfully
+                ---------
+                
+                """);
     }
     public void deleteStudent() {
         // prompt student id
@@ -228,9 +223,17 @@ public class StudentService {
 
             save();
 
-            System.out.println("Student deleted successfully." + "\n --------- \n\n");
+            System.out.print("""
+                Student deleted successfully
+                ---------
+                
+                """);
         } else {
-            System.out.println("Deletion cancelled." + "\n --------- \n\n");
+            System.out.print("""
+                Deletion cancelled.
+                ---------
+                
+                """);
         }
     }
     public void viewStudent() {
@@ -250,12 +253,21 @@ public class StudentService {
             return;
         }
 
-        System.out.println("ID: " + student.getId());
-        System.out.println("Name: " + student.getName());
-        System.out.println("D.O.B: " + student.getDob());
-        System.out.println("Age: " + student.getAge());
-        System.out.println("Grade: " + student.getGrade());
-        System.out.println("Section: " + student.getSection());
+        System.out.print("""
+            ID: %s
+            Name: %s
+            D.O.B: %s
+            Age: %d
+            Grade: %s
+            Section: %s
+            """.formatted(
+                    student.getId(),
+                    student.getName(),
+                    student.getDob(),
+                    student.getAge(),
+                    student.getGrade(),
+                    student.getSection()
+            ));
 
         Integer[] marks = student.getScores();
 
@@ -264,7 +276,10 @@ public class StudentService {
                     this.subjects[i] + ": " + marks[i]
             );
         }
-        System.out.println("\n --------- \n\n");
+        System.out.print("""
+                ---------
+                
+                """);
 
     }
 }
