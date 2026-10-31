@@ -18,7 +18,17 @@ import java.util.stream.Collectors;
 // add, update, delete, and view.
 // Focuses on core Java, OOP, collections, and file handling
 
-public class ManageStudentRecords {
+/**
+ * ├── ManageStudentRecords.java
+ * ├── Student.java
+ * ├── StudentInputScanner.java
+ * ├── ConsoleStudentInputScanner.java
+ * ├── StudentFileHandler.java
+ * ├── StudentService.java
+ * └── StudentValidator.java
+ */
+
+public class ManageStudentRecords_old {
 
     private static final Scanner scan = new Scanner(System.in);
 
@@ -189,7 +199,7 @@ public class ManageStudentRecords {
     private static final String[] SUBJECTS = {"English","Math","Biology","Chemistry","Physics"};
     private static final String FILE_PATH = "studentRecords.csv";
 
-    static List<Student> students = new ArrayList<> ();
+    static List<Student_old> students = new ArrayList<> ();
 
     static public void InitializeStudentsData() {
         // Load existing student records from the file.
@@ -230,7 +240,7 @@ public class ManageStudentRecords {
         } while (userChoice != 5);
 
     }
-    public static void saveToFile(List < Student > students) {
+    public static void saveToFile(List <Student_old> students) {
         saveToCsvFile(FILE_PATH, students);
         // later incase a different file per grade or subject required.
     }
@@ -255,8 +265,8 @@ public class ManageStudentRecords {
                 System.out.println("Incorrect input. Please try again.\n");
         }
     }
-    public static List < Student > loadFromCsvFile(String filePath) {
-        List < Student > studentsFromCSV = new ArrayList<> ();
+    public static List <Student_old> loadFromCsvFile(String filePath) {
+        List <Student_old> studentsFromCSV = new ArrayList<> ();
 
         File file = new File(filePath);
         if (!file.exists()) {
@@ -313,7 +323,7 @@ public class ManageStudentRecords {
                             throw new IllegalArgumentException("Invalid mark");
                         }
                     }
-                    studentsFromCSV.add(new Student(id, name, dob, grade, section, scores));
+                    studentsFromCSV.add(new Student_old(id, name, dob, grade, section, scores));
                     loadedCount++;
 
                 } catch (RuntimeException  e) {
@@ -335,10 +345,10 @@ public class ManageStudentRecords {
 
         return studentsFromCSV;
     }
-    public static void saveToCsvFile(String filePath, List < Student > students) {
+    public static void saveToCsvFile(String filePath, List <Student_old> students) {
 
         try (BufferedWriter bufWriter = new BufferedWriter(new FileWriter(filePath))) {
-            for (Student student: students) {
+            for (Student_old student: students) {
 
                 Integer[] scores = student.getScores();
                 String scoreStr = Arrays.stream(scores)
@@ -372,14 +382,14 @@ public class ManageStudentRecords {
         Integer[] scores = inputScanner.scanSubjectMarks(SUBJECTS);
 
         String id = String.valueOf(UUID.randomUUID());
-        Student newStudent = new Student(id, name, dob, grade, section, scores);
+        Student_old newStudent = new Student_old(id, name, dob, grade, section, scores);
 
         students.add(newStudent);
         System.out.println("Student added successfully with ID: " + id + "\n --------- \n\n");
         saveToFile(students);
     }
-    private static Student selectStudent(String search) {
-        List<Student> matches = students.stream()
+    private static Student_old selectStudent(String search) {
+        List<Student_old> matches = students.stream()
                 .filter(s ->
                         s.getName().toLowerCase().contains(search.toLowerCase()) ||
                                 s.getId().equalsIgnoreCase(search))
@@ -397,7 +407,7 @@ public class ManageStudentRecords {
         System.out.println("Multiple students found:");
 
         for (int i = 0; i < matches.size(); i++) {
-            Student s = matches.get(i);
+            Student_old s = matches.get(i);
 
             System.out.printf(
                     "%d. %s | Grade: %s | Section: %s | ID: %s%n",
@@ -417,7 +427,7 @@ public class ManageStudentRecords {
 
         return matches.get(choice - 1);
     }
-    private static void printStudentTable(List<Student> records) {
+    private static void printStudentTable(List<Student_old> records) {
         System.out.printf(
                 "%-36s %-18s %-12s %-7s %-8s%n",
                 "ID", "Name", "DOB", "Grade", "Section"
@@ -425,7 +435,7 @@ public class ManageStudentRecords {
 
         System.out.println("-".repeat(85));
 
-        for (Student student : records) {
+        for (Student_old student : records) {
             System.out.printf(
                     "%-36s %-18s %-12s %-7s %-8s%n",
                     student.getId(),
@@ -447,7 +457,7 @@ public class ManageStudentRecords {
         while (currentIndex < students.size()) {
             int endIndex = Math.min(currentIndex + pageSize, students.size());
 
-            List<Student> page = students.subList(currentIndex, endIndex);
+            List<Student_old> page = students.subList(currentIndex, endIndex);
 
             System.out.println("\n--- Student Records ("
                     + (currentIndex + 1) + "-" + endIndex
@@ -478,7 +488,7 @@ public class ManageStudentRecords {
         // prompt search student with id name,then which property to update
         System.out.println("2. Update Student ========");
 
-        Student student = selectStudent(inputScanner.scanSearchTerm());
+        Student_old student = selectStudent(inputScanner.scanSearchTerm());
 
         if (student == null) {
             return;
@@ -537,7 +547,7 @@ public class ManageStudentRecords {
         // prompt student id
         System.out.println("3. Delete Student ========");
 
-        Student student = selectStudent(inputScanner.scanSearchTerm());
+        Student_old student = selectStudent(inputScanner.scanSearchTerm());
 
         if (student == null) {
             return;
@@ -571,7 +581,7 @@ public class ManageStudentRecords {
             return;
         }
 
-        Student student = selectStudent(search);
+        Student_old student = selectStudent(search);
 
         if (student == null) {
             return;
@@ -597,7 +607,7 @@ public class ManageStudentRecords {
 
 }
 
-class Student {
+class Student_old {
     // props ID, name, class, age, section, marks
     // but marks can be subject wise for a class or a section with student ID
     // subject would have an ID then subId + studentID becomes index
@@ -609,7 +619,7 @@ class Student {
     private String section;
     private Integer[] scores;
 
-    Student(String id, String name, LocalDate dob, String grade, String section, Integer[] scores) {
+    Student_old(String id, String name, LocalDate dob, String grade, String section, Integer[] scores) {
         this.id = id;
         this.name = name;
         this.dob = dob;
