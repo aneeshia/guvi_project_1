@@ -13,7 +13,7 @@ class Main {
     private static final String[] SUBJECTS = {"English","Math","Biology","Chemistry","Physics"};
     private static final String FILE_PATH = "studentRecords.csv";
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
 
 
         int userChoice;
