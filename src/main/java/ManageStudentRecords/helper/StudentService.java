@@ -253,21 +253,21 @@ public class StudentService {
             return;
         }
 
-        System.out.print("""
+        System.out.printf("""
             ID: %s
             Name: %s
             D.O.B: %s
             Age: %d
             Grade: %s
             Section: %s
-            """.formatted(
-                    student.getId(),
-                    student.getName(),
-                    student.getDob(),
-                    student.getAge(),
-                    student.getGrade(),
-                    student.getSection()
-            ));
+            """,
+            student.getId(),
+            student.getName(),
+            student.getDob(),
+            student.getAge(),
+            student.getGrade(),
+            student.getSection()
+        );
 
         Integer[] marks = student.getScores();
 

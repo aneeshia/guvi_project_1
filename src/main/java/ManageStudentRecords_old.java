@@ -17,15 +17,14 @@ import java.util.stream.Collectors;
 // Question: Build a console-based application to manage student records with features like
 // add, update, delete, and view.
 // Focuses on core Java, OOP, collections, and file handling
-
+//NOT USED - OLD VERSION
 /**
  * ├── ManageStudentRecords.java
  * ├── Student.java
  * ├── StudentInputScanner.java
  * ├── ConsoleStudentInputScanner.java
  * ├── StudentFileHandler.java
- * ├── StudentService.java
- * └── StudentValidator.java
+ * └── StudentService.java
  */
 
 public class ManageStudentRecords_old {

@@ -6,7 +6,7 @@ import ManageStudentRecords.helper.StudentService;
 
 import java.util.Scanner;
 
-public class Main {
+class Main {
 
     private static final Scanner scan = new Scanner(System.in);
     private static final StudentInputScanner inputScanner = new ConsoleStudentInputScanner(scan);
@@ -19,7 +19,7 @@ public class Main {
         int userChoice;
         do {
             System.out.print("""
-                Manage Student Records: 
+                Manage Student Records:
                 1. Add New Student
                 2. Update Student Details
                 3. Delete Student
