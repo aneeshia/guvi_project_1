@@ -53,7 +53,7 @@ public class StudentFileHandler {
 
                     // Expect 6 fields: id, name, dob, grade, section, scores
                     if (fields.length != 6) {
-                        System.out.println("Skipping invalid CSV record."+ lineNumber);
+                        System.out.println("Skipping invalid CSV record at line "+ lineNumber);
                         skippedCount++;
                         continue;
                     }
@@ -66,6 +66,18 @@ public class StudentFileHandler {
 
                     // Extract  "85;90;78;92;88"
                     String[] scoreTokens = fields[5].split(";", -1);
+                    Integer[] scores = new Integer[scoreTokens.length];
+                    for (int i = 0; i < scoreTokens.length; i++) {
+                        scores[i] = Integer.parseInt(scoreTokens[i].trim());
+                    }
+
+                    Student student = new Student(id, name, dob, grade, section, scores);
+                    if (!StudentValidator.isValidStudent(student, subjectCount)) {
+                        skippedCount++;
+                        System.out.println("Skipping invalid student record at line " + lineNumber);
+                        continue;
+                    }
+                    /*
                     // Check required fields and marks
                     if (id.isEmpty() || name.isEmpty() || grade.isEmpty() || section.isEmpty()
                             || scoreTokens.length != this.subjectCount
@@ -83,21 +95,21 @@ public class StudentFileHandler {
                         if (scores[i] < 0 || scores[i] > 100) {
                             throw new IllegalArgumentException("Invalid mark");
                         }
-                    }
+                    }*/
                     studentsFromCSV.add(new Student(id, name, dob, grade, section, scores));
                     loadedCount++;
 
                 } catch (RuntimeException  e) {
 //                    System.err.println("Skipping invalid csv record: " + e.getMessage());
                     skippedCount++;
-                    System.err.println(
+                    System.out.println(
                             "Skipping invalid CSV record at line " + lineNumber
                                     + ": " + e.getMessage()
                     );
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading csv file: " + e.getMessage());
+            System.out.println("Error reading csv file: " + e.getMessage());
             return studentsFromCSV;
         }
 
@@ -128,7 +140,7 @@ public class StudentFileHandler {
                 bufWriter.newLine(); // Move to the next line
             }
         } catch (IOException e) {
-            System.err.println("Error writing to CSV file: " + e.getMessage());
+            System.out.println("Error writing to CSV file: " + e.getMessage());
         }
     }
 

@@ -39,9 +39,11 @@ public class ConsoleStudentInputScanner implements StudentInputScanner {
             System.out.print("D.O.B (yyyy-MM-dd): ");
             try {
                 LocalDate dob = LocalDate.parse(scanner.nextLine().trim());
-                // Handle future D.O.B
-                if(dob.isAfter(LocalDate.now())) {
-                    System.out.println("Date of birth cannot be in the future.");
+                // Handle valid D.O.B range
+                if (!StudentValidator.isValidDob(dob)) {
+                    System.out.println(
+                            "Invalid DOB. Student age must be between 3 and 150."
+                    );
                     continue;
                 }
                 return dob;

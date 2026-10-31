@@ -10,12 +10,16 @@ class Main {
 
     private static final Scanner scan = new Scanner(System.in);
     private static final StudentInputScanner inputScanner = new ConsoleStudentInputScanner(scan);
-    private static final String[] SUBJECTS = {"English","Math","Biology","Chemistry","Physics"};
+    private static final String[] SUBJECTS = {"ENG","MAT","BIO","CHE","PHY"};
     private static final String FILE_PATH = "studentRecords.csv";
+    private final StudentService studentService;
+
+    public Main() {
+        this.studentService = new StudentService(FILE_PATH, SUBJECTS, inputScanner);
+    }
 
     static void main(String[] args) {
-
-
+        Main app = new Main();
         int userChoice;
         do {
             System.out.print("""
@@ -30,13 +34,11 @@ class Main {
             userChoice = inputScanner.scanChoice(
                     "Choose an option", 1, 5
             );
-            checkUserChoice(userChoice);
+            app.handleUserChoice(userChoice);
         } while (userChoice != 5);
     }
 
-    public static void checkUserChoice(int userChoice) {
-        StudentService studentService = new StudentService(FILE_PATH, SUBJECTS, inputScanner);
-
+    private void handleUserChoice(int userChoice) {
         switch (userChoice) {
             case 1:
                 studentService.addStudent();

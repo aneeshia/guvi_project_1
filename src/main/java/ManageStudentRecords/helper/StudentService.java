@@ -2,6 +2,7 @@ package ManageStudentRecords.helper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -11,7 +12,6 @@ public class StudentService {
     private final String[] subjects;
     private final StudentInputScanner inputScanner;
     private final StudentFileHandler fileHandler;
-
 
     public StudentService(String filePath, String[] subjects, StudentInputScanner inputScanner) {
         this.subjects = subjects.clone();
@@ -80,62 +80,7 @@ public class StudentService {
 
         return matches.get(choice - 1);
     }
-    private void printStudentTable(List<Student> records) {
-        System.out.printf(
-                "%-36s %-18s %-12s %-7s %-8s%n",
-                "ID", "Name", "DOB", "Grade", "Section"
-        );
 
-        System.out.println("-".repeat(85));
-
-        for (Student student : records) {
-            System.out.printf(
-                    "%-36s %-18s %-12s %-7s %-8s%n",
-                    student.getId(),
-                    student.getName(),
-                    student.getDob(),
-                    student.getGrade(),
-                    student.getSection()
-            );
-        }
-    }
-    private void viewAllStudents() {
-        if (students.isEmpty()) {
-            System.out.println("No student records available.");
-            return;
-        }
-        int pageSize = 10;
-        int currentIndex = 0;
-
-        while (currentIndex < students.size()) {
-            int endIndex = Math.min(currentIndex + pageSize, students.size());
-
-            List<Student> page = students.subList(currentIndex, endIndex);
-
-            System.out.println("\n--- Student Records ("
-                    + (currentIndex + 1) + "-" + endIndex
-                    + " of " + students.size() + ") ---");
-
-            printStudentTable(page);
-
-            currentIndex = endIndex;
-
-            // No more records to display
-            if (currentIndex >= students.size()) {
-                System.out.println("End of student records.\n");
-                return;
-            }
-
-            System.out.println("\n1. Load next 10 students");
-            System.out.println("2. Return to main menu");
-
-            int choice = inputScanner.scanChoice("Choose an option", 1, 2);
-
-            if (choice == 2) {
-                return;
-            }
-        }
-    }
 
     public void updateStudent() {
         // prompt search student with id name,then which property to update
@@ -238,7 +183,6 @@ public class StudentService {
     }
     public void viewStudent() {
         // prompt student id, name => show.
-        // in future may be show all - first 10 and load more or cancel or search - complicated.
         System.out.println("4. View Student ========");
         String search = inputScanner.scanSearchTerm(true);
 
@@ -248,38 +192,109 @@ public class StudentService {
         }
 
         Student student = selectStudent(search);
-
         if (student == null) {
             return;
         }
+        printSingleStudentDetails(student);
+    }
 
+
+    private void printSingleStudentDetails(Student student) {
+        String shortSubTitle = String.join("  ", this.subjects);
         System.out.printf("""
-            ID: %s
-            Name: %s
-            D.O.B: %s
-            Age: %d
-            Grade: %s
-            Section: %s
+            
+            ---------------- STUDENT DETAILS ----------------
+            
+            ID       : %s
+            Name     : %s
+            Age      : %d
+            Grade    : %s
+            Section  : %s
+
             """,
-            student.getId(),
-            student.getName(),
-            student.getDob(),
-            student.getAge(),
-            student.getGrade(),
-            student.getSection()
+                student.getId(),
+                student.getName(),
+                student.getAge(),
+                student.getGrade(),
+                student.getSection()
         );
 
-        Integer[] marks = student.getScores();
+        // Subject headings
+        System.out.printf("%-11s", " ");
+        System.out.printf("%-6s%n", shortSubTitle);
 
-        for (int i = 0; i < this.subjects.length; i++) {
-            System.out.println(
-                    this.subjects[i] + ": " + marks[i]
-            );
+        // Marks
+        System.out.printf("%-11s", "Marks");
+
+        for (Integer mark : student.getScores()) {
+            System.out.printf("%-5s", mark);
         }
-        System.out.print("""
-                ---------
-                
-                """);
+        System.out.println("\n\n--------------------------------------------------\n");
+    }
+    private void printStudentTable(List<Student> records) {
+        String shortSubTitle = String.join("  ", this.subjects);
+        System.out.printf(
+                "%-36s %-18s %-12s %-7s %-8s %-36s%n",
+                "ID", "Name", "DOB", "Grade", "Section", shortSubTitle
+        );
+        System.out.println("-".repeat(85 + subjects.length * 5));
 
+        for (Student student : records) {
+            System.out.printf(
+                    "%-36s %-18s %-12s %-7s %-8s ",
+                    student.getId(),
+                    student.getName(),
+                    student.getDob(),
+                    student.getGrade(),
+                    student.getSection()
+            );
+            for (Integer mark : student.getScores()) {
+                System.out.printf("%-5s", mark);
+            }
+            System.out.println();
+        }
+    }
+    private void viewAllStudents() {
+        if (students.isEmpty()) {
+            System.out.println("No student records available.");
+            return;
+        }
+        int pageSize = 3;
+        int currentIndex = 0;
+        int studentCount = students.size();
+
+        while (currentIndex < students.size()) {
+            int endIndex = Math.min(currentIndex + pageSize, students.size());
+
+            List<Student> page = students.subList(currentIndex, endIndex);
+
+            System.out.println("\nSTUDENT RECORDS");
+            System.out.println("-".repeat(85 + subjects.length * 5));
+
+            printStudentTable(page);
+
+            currentIndex = endIndex;
+
+            // No more records to display
+            if (currentIndex >= students.size()) {
+                System.out.println("-".repeat(85 + subjects.length * 5));
+                System.out.println("End of student records.\n");
+                return;
+            }
+
+            System.out.println("-".repeat(85 + subjects.length * 5));
+            System.out.printf("""
+            Total Records: %d  Showing %d-%d of %d
+            
+            [1] Load next %d students  [2] Return to main menu
+
+            """, studentCount, (currentIndex + 1), endIndex, studentCount, pageSize);
+
+            int choice = inputScanner.scanChoice("Choose an option", 1, 2);
+
+            if (choice == 2) {
+                return;
+            }
+        }
     }
 }
